@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Description: >-
+  CloudFormation template to create DynamoDB tables.
+
+Parameters:
+
+  Table1:
+    Description: Table to hold Hash Keys for open Shards of a Kinesis Stream 
+    Type: String
+    Default: kinesis_hash_keys
+ 
+
+Resources:
+  HashkeyListTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref 'Table1'
+      AttributeDefinitions:
+      - AttributeName: shard_id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: shard_id
+        KeyType: HASH   
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5  
+
+Outputs:
+  HashkeyListTable:
+    Value: !Ref HashkeyListTable
+    Description: Table to hold Hash Keys for open Shards of a Kinesis Stream 
+    Export:
+      Name: HashkeyListTable
